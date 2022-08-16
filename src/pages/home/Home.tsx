@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, Container, Typography} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {useAppDispatch} from "redux/store";
-import {setNoEquations} from "redux/calculationsSlice";
+import {reset, setNoEquations} from "redux/calculationsSlice";
 import {useNavigate} from "react-router";
 
 interface Props {}
@@ -12,8 +12,22 @@ const Home = (props: Props) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        dispatch(reset());
+    }, []);
+
     const handleStartGame = (data: any): void => {
-        console.log('set noc')
+        if (!data.noc) {
+            alert('insert number of calculations')
+            return;
+        }
+
+        if (parseInt(data.noc) < 20 || parseInt(data.noc) > 60) {
+            alert('insert number of calculations from interval <20 ; 60>');
+            methods.reset();
+            return;
+        }
+
         dispatch(setNoEquations(parseInt(data.noc)));
         navigate('/calculations');
     }

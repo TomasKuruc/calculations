@@ -2,7 +2,7 @@ import React from 'react';
 import {Grid} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {useAppDispatch} from "redux/store";
-import {mutateEquation} from "redux/calculationsSlice";
+import {incrementCounterOfFinishedEquations, mutateEquation} from "redux/calculationsSlice";
 import clsx from "clsx";
 
 interface Props {
@@ -19,7 +19,7 @@ const Equation = (props: Props) => {
     const bgColor: string = props.user_answer === props.correct_answer ? 'green-bg' : 'red-bg'
 
     const handleSubmitEqAnswer = (data: any): void => {
-        if (!props.completed) {
+        if (props.completed) {
             return;
         }
 
@@ -33,6 +33,7 @@ const Equation = (props: Props) => {
             value: true
         }]));
 
+        dispatch(incrementCounterOfFinishedEquations());
     }
 
     return (
@@ -45,7 +46,7 @@ const Equation = (props: Props) => {
                 </div>
                 <div className={'Calculations__input-wrap'}>
                     <input type="hidden" {...methods.register('eid')} defaultValue={props.eid}/>
-                    <input type="text" {...methods.register('value')}/>
+                    <input type="text" {...methods.register('value')} disabled={props.completed}/>
                 </div>
             </form>
         </Grid>

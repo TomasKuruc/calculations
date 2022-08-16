@@ -59,8 +59,10 @@ export const calculationsSlice = createSlice({
             state.finished_eq = state.equations.filter(eq => eq.completed).length;
         },
 
+        reset: (state, action: PayloadAction<void>) => {
+            Object.assign(state, initialState);
+        },
         resetEquations: (state, action: PayloadAction<void>) => {
-            // Object.assign(state, initialState);
             state.equations = [];
         }
     },
@@ -71,10 +73,12 @@ export const {
     resetEquations,
     incrementCounterOfFinishedEquations,
     setNoEquations,
-    mutateEquation
+    mutateEquation,
+    reset
 } = calculationsSlice.actions;
 
 export const selectEquations = (state: RootState) => state.calculations.equations;
 export const selectNoEquations = (state: RootState) => state.calculations.no_equations;
+export const selectFinishedEquations = (state: RootState) => state.calculations.finished_eq;
 
 export default calculationsSlice.reducer;
