@@ -1,17 +1,12 @@
 import React, {useEffect} from 'react';
-import {addEquation, resetEquations, selectEquations, selectNoEquations} from "redux/calculationsSlice";
+import {addEquation, resetEquations, selectNoEquations} from "redux/calculationsSlice";
 import {generateRandomID} from "utils/generateRandomID";
 import {useAppDispatch, useAppSelector} from "redux/store";
-import {useNavigate} from "react-router";
 
 
 const useEquations = (): void => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
     const noc = useAppSelector(selectNoEquations);
-    const equations = useAppSelector(selectEquations);
-
-    console.log(noc)
 
     const getRandomInt = (min: number = 1, max: number = 10): number => {
         min = Math.ceil(min);
@@ -19,8 +14,36 @@ const useEquations = (): void => {
         return Math.floor(Math.random() * (max - min) + min);
     }
 
+    const findQuotient = (n: number, m: number, length: number = 10): number => {
+        if (n < m || n === 0) return 0;
+
+        if (n - m === 1) return 1;
+
+        // n / m = r
+        // dividend / divisor = quotient
+        const numbers = Array.from(Array(length), (_, index) => index + 1)
+        let r: number = 0;
+
+        numbers.map(number => {
+            if (m * number === n) {
+                r = number;
+            }
+        });
+
+        // if r === 0 it means that we didn't find quotient, so we want to find the closest one
+        if (r === 0) {
+            r = numbers.reduce((prev: number, current: number) => {
+               return m * current < n
+                   ? current
+                   : prev;
+            })
+        }
+
+        return r;
+    }
+
     const getRandomArithmeticOperation = (): string => {
-        const operation = getRandomInt(1, 4);
+        const operation = getRandomInt(1, 5);
 
         switch (operation) {
             case 1:
@@ -29,6 +52,8 @@ const useEquations = (): void => {
                 return '-';
             case 3:
                 return 'x';
+            case 4:
+                return '/'
             default:
                 return '+'
         }
@@ -42,6 +67,8 @@ const useEquations = (): void => {
                 return n - m;
             case 'x':
                 return n * m;
+            case '/':
+                return findQuotient(n, m);
             default:
                 return 0;
         }
