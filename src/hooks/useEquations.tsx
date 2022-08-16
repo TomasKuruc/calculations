@@ -1,11 +1,17 @@
 import React, {useEffect} from 'react';
-import {addEquation, Equation, incrementCounterOfFinishedEquations, resetEquations} from "redux/calculationsSlice";
+import {addEquation, resetEquations, selectEquations, selectNoEquations} from "redux/calculationsSlice";
 import {generateRandomID} from "utils/generateRandomID";
-import {useAppDispatch} from "redux/store";
+import {useAppDispatch, useAppSelector} from "redux/store";
+import {useNavigate} from "react-router";
 
 
-const useEquations = (noc: number): void => {
+const useEquations = (): void => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const noc = useAppSelector(selectNoEquations);
+    const equations = useAppSelector(selectEquations);
+
+    console.log(noc)
 
     const getRandomInt = (min: number = 1, max: number = 10): number => {
         min = Math.ceil(min);
@@ -22,7 +28,7 @@ const useEquations = (noc: number): void => {
             case 2:
                 return '-';
             case 3:
-                return '*';
+                return 'x';
             default:
                 return '+'
         }
@@ -34,7 +40,7 @@ const useEquations = (noc: number): void => {
                 return n + m;
             case '-':
                 return n - m;
-            case '*':
+            case 'x':
                 return n * m;
             default:
                 return 0;
@@ -53,16 +59,18 @@ const useEquations = (noc: number): void => {
             op_n: N,
             op_m: M,
             eq: `${N} ${op} ${M} =`,
-            answer: r,
+            correct_answer: r,
             completed: false
         }));
     }
 
     useEffect(() => {
-        dispatch(resetEquations());
-
         for (let i = 0; i < noc; i++) {
             generateEquation();
+        }
+
+        return () => {
+            dispatch(resetEquations());
         }
     }, []);
 };

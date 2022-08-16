@@ -8,8 +8,15 @@ export interface Equation {
     op_n: number,
     op_m: number,
     eq: string,
-    answer: number,
+    correct_answer: number,
+    user_answer?: number,
     completed: boolean
+}
+
+interface MutateOptions {
+    eid: string,
+    key: string,
+    value: string | number | boolean
 }
 
 interface CalculationsState {
@@ -31,18 +38,43 @@ export const calculationsSlice = createSlice({
         addEquation: (state, action: PayloadAction<Equation>) => {
             state.equations.push(action.payload);
         },
+        mutateEquation: (state, action: PayloadAction<MutateOptions[]>) => {
+            Promise.all(action.payload.map((equation: MutateOptions) => {
+                const eqIndex = state.equations.findIndex(eq => eq.eid === equation.eid);
+
+                if (eqIndex === -1 || eqIndex === undefined) {
+                    return;
+                }
+
+                state.equations[eqIndex] = {
+                    ...state.equations[eqIndex],
+                    [equation.key]: equation.value
+                };
+            }));
+        },
+        setNoEquations: (state, action: PayloadAction<number>) => {
+            state.no_equations = action.payload;
+        },
         incrementCounterOfFinishedEquations: (state, action: PayloadAction<void>) => {
             state.finished_eq = state.equations.filter(eq => eq.completed).length;
         },
 
         resetEquations: (state, action: PayloadAction<void>) => {
-            Object.assign(state, initialState);
+            // Object.assign(state, initialState);
+            state.equations = [];
         }
     },
 })
 
-export const { addEquation, resetEquations, incrementCounterOfFinishedEquations } = calculationsSlice.actions;
+export const {
+    addEquation,
+    resetEquations,
+    incrementCounterOfFinishedEquations,
+    setNoEquations,
+    mutateEquation
+} = calculationsSlice.actions;
 
 export const selectEquations = (state: RootState) => state.calculations.equations;
+export const selectNoEquations = (state: RootState) => state.calculations.no_equations;
 
 export default calculationsSlice.reducer;
