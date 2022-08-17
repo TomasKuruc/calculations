@@ -51,7 +51,7 @@ const Equation = (props: Props) => {
                 </div>
                 <div className={'Calculations__input-wrap'}>
                     <input type="hidden" {...methods.register('eid')} defaultValue={props.eid}/>
-                    <input type="text" {...methods.register('value')} disabled={props.completed} pattern="[0-9]+"/>
+                    <input type="text" {...methods.register('value')} disabled={props.completed} pattern="^[-+]?[0-9]"/>
                 </div>
             </form>
         </Grid>
