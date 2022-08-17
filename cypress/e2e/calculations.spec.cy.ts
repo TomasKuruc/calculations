@@ -48,7 +48,7 @@ describe('calculations spec', () => {
     cy.get('.Calculations div').first().should('have.class', 'red-bg');
   });
 
-  it.only('test equation: successful ', () => {
+  it('test equation: successful ', () => {
     cy.get('.Homepage__noc-input-wrap input').type(`20{enter}`);
 
     const equation = cy.get('.Calculations div').first();
