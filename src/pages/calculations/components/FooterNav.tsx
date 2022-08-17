@@ -12,7 +12,7 @@ const FooterNav = (props: Props) => {
 
     return (
         <Grid container className={'FooterNav'} justifyContent={'space-between'}>
-            <Grid item xs={6} style={{textAlign: "left", fontSize: '30px'}}>
+            <Grid item xs={6} style={{textAlign: "left", fontSize: '30px'}} className={'FinishedEq'}>
                 Finished: {finished} / {noc}
             </Grid>
             <Grid item xs={6} style={{textAlign: "right"}}>
