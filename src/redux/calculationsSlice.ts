@@ -64,6 +64,7 @@ export const calculationsSlice = createSlice({
         },
         resetEquations: (state, action: PayloadAction<void>) => {
             state.equations = [];
+            state.finished_eq = 0;
         }
     },
 })
